@@ -6,11 +6,12 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import jakarta.annotation.PostConstruct;
+//import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class TelegramBotUpdatesListener {
+public class TelegramBotUpdatesListener implements UpdatesListener{
     private static final Pattern PATTERN = Pattern.compile("([0-9,.:\\s]{16})(\\s)([\\W+]+)");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
@@ -34,10 +35,10 @@ public class TelegramBotUpdatesListener {
 
     @PostConstruct
     public void init() {
-        telegramBot.setUpdatesListener((UpdatesListener) this);
+        telegramBot.setUpdatesListener(this);
     }
 
-    //@Override
+    @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
@@ -45,7 +46,7 @@ public class TelegramBotUpdatesListener {
             String textMessage = update.message().text();
 
             if (update.message().text().equals("/start")) {
-                SendMessage greeting = new SendMessage(update.message().chat().id(), "Привет. Это бот для уведомлений." +
+                SendMessage greeting = new SendMessage(update.message().chat().id(), "Добро пожаловать. Это бот для уведомлений." +
                         "Введите заметку в формате: дд.мм.гггг чч:мм задача");
                 telegramBot.execute(greeting);
             } else {

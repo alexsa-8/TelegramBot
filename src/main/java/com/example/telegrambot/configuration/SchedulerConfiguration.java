@@ -2,6 +2,7 @@ package com.example.telegrambot.configuration;
 
 import com.example.telegrambot.entity.NotificationTask;
 import com.example.telegrambot.repository.NotificationTaskRepository;
+
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,5 @@ public class SchedulerConfiguration {
             SendMessage message = new SendMessage(notificationTask.getChatId(), notificationTask.getMessage());
             telegramBot.execute(message);
         }
-
     }
 }
